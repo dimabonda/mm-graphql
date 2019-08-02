@@ -155,10 +155,6 @@ function mmExpandSchema(gqlSchema){
 
     let newSchema = new GraphQLSchema({query: newQuery, mutation: newMutation})
     return newSchema;
-    
-    //console.log(types)
-    //console.log(queryFields)
-    //console.log(_typeMap.Query.getFields())
 }
 
 
@@ -172,30 +168,6 @@ function mmExpandSchema(gqlSchema){
         }
     }
     Savable.addClass(User)
-
-
-
-        //type Query {
-            //login(login: String!, password: String!): String
-
-            //categories: [Category]
-            //category(_id: ID!): Category
-
-            //goods: [Good]
-            //good(_id: ID!): Good
-
-            //myOrders: [Order]
-            //orders: [Order]
-        //}
-        //type Mutation {
-            //createUser(login: String!, password: String!): User
-            //changePassword(password: String!): User
-
-            //setCategory(cat: CategoryInput!):Category
-            //setGood(good: GoodInput!):Good
-            //setOrder(order: OrderInput):Order
-            //setOrderGood(orderGood: OrderGoodInput):OrderGood
-        //}
 
 
     let schema = buildSchema(`
@@ -224,7 +196,6 @@ function mmExpandSchema(gqlSchema){
             name: String,
             goods: [GoodInput]
         }
-
 
         type Good {
             _id: ID,
