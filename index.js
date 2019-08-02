@@ -41,7 +41,7 @@ function mmExpandSchema(gqlSchema){
                     }
                 }
                 else {
-                    const nestedTypeName = typeName.slice(0,-6)
+                    const nestedTypeName = typeName.slice(0,-5)
                     console.log('one', nestedTypeName)
                     entity[fieldName] = await argToSavables(value, nestedTypeName, Savable)
                 }
