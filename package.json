@@ -1,0 +1,28 @@
+{
+  "name": "mm-graphql",
+  "version": "1.0.0",
+  "description": "Mock back for frontend students",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.a-level.com.ua:gitgod/mm-graphql.git"
+  },
+  "keywords": [
+    "node",
+    "mm",
+    "mongo",
+    "graphql"
+  ],
+  "author": "Ivan Grynkin",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
+    "graphql": "^14.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "mm": "git+ssh://git@gitlab.a-level.com.ua:gitgod/mm.git"
+  }
+}
