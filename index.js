@@ -9,17 +9,9 @@ const { buildSchema, printSchema } = require('graphql');
 const expand = require('./expand')
 
 ;(async () => {
+
     const {Savable, slice, getModels} = await require('./models.js')()
-
     const jwtGQL = require('./jwt')
-
-    class User extends Savable {
-        static get relations(){
-            return {
-            }
-        }
-    }
-    Savable.addClass(User)
 
     let schema = buildSchema(`
         type User {
@@ -104,8 +96,13 @@ const expand = require('./expand')
     schema = expand(schema)
     console.log(printSchema(schema))
 
-    var app = express();
-    app.use(express.static('public'));
+
+
+
+    class User extends Savable {
+
+    }
+    Savable.addClass(User)
 
     const anonResolvers = {
         createUser:async function ({login, password}){
@@ -158,8 +155,9 @@ const expand = require('./expand')
 
     `)
 
+    const app = express();
+    app.use(express.static('public'));
     app.use('/graphql', express_graphql(jwtGQL({anonSchema, anonResolvers, schema, createContext: getModels, graphiql: true, secret: jwtSecret})))
-
     app.listen(4000, () => console.log('Express GraphQL Server Now Running On localhost:4000/graphql'));
 })()
 
