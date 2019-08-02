@@ -1,4 +1,5 @@
 const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLSchema } = require('graphql');
+const ObjectID    = require("mongodb").ObjectID;
 function mmExpandSchema(gqlSchema){
     const types    = {}
     const _typeMap = gqlSchema.getTypeMap()
