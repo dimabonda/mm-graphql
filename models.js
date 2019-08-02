@@ -25,7 +25,7 @@ module.exports = async (dbName='shop') => {
         class Good extends SlicedSavable {
             constructor(...params){
                 super(...params)
-                this.categories = this.category instanceof Array ? this.category : (this.category ? [this.category] : []) 
+                this.categories = this.categories instanceof Array ? this.categories : (this.categories ? [this.categories] : []) 
                 this.orderGoods = this.orderGoods instanceof Array ? this.orderGoods : (this.orderGoods ? [this.orderGoods] : []) 
             }
 
