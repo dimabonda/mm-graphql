@@ -159,6 +159,8 @@ function mmExpandSchema(gqlSchema){
 ;(async () => {
     const {Savable, slice, getModels} = await require('./models.js')()
 
+    const jwtGQL = require('./jwt')
+
     class User extends Savable {
         static get relations(){
             return {
@@ -308,36 +310,35 @@ function mmExpandSchema(gqlSchema){
 
     `)
 
+    app.use('/graphql', express_graphql(jwtGQL({anonSchema, anonResolvers, schema, createContext: getModels, graphiql: true, secret: jwtSecret})))
 
-    app.use('/graphql', express_graphql(async (req, res, gql) => { 
-        const authorization = req.headers.authorization 
+    //app.use('/graphql', express_graphql(async (req, res, gql) => { 
+        //const authorization = req.headers.authorization 
         
-        if (authorization && authorization.startsWith('Bearer ')){
-            console.log('token provided')
-            const token = authorization.substr("Bearer ".length)
-            const decoded = jwt.verify(token, jwtSecret)
-            if (decoded){
-                console.log('token verified', decoded)
+        //if (authorization && authorization.startsWith('Bearer ')){
+            //console.log('token provided')
+            //const token = authorization.substr("Bearer ".length)
+            //const decoded = jwt.verify(token, jwtSecret)
+            //if (decoded){
+                //console.log('token verified', decoded)
 
-                let slicedModels  = await getModels(decoded.sub.id)
+                //let slicedModels  = await getModels(decoded.sub.id)
 
-                return {
-                    schema: schema,
-                    rootValue: {},
-                    graphiql: true, 
-                    context: {jwt: decoded.sub,
-                              models: slicedModels}
-                }
-            }
-        }
-        else {
-            return {
-                schema: anonSchema,
-                rootValue: anonResolvers,
-                graphiql: true, 
-            }
-        }
-    }))
+                //return {
+                    //schema: schema,
+                    //rootValue: {},
+                    //graphiql: true, 
+                    //context: {jwt: decoded.sub,
+                              //models: slicedModels}
+                //}
+            //}
+        //}
+        //return {
+            //schema: anonSchema,
+            //rootValue: anonResolvers,
+            //graphiql: true, 
+        //}
+    //}))
 
     app.listen(4000, () => console.log('Express GraphQL Server Now Running On localhost:4000/graphql'));
 })()

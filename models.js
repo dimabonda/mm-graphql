@@ -5,7 +5,7 @@ const {connect}          = require('mm')
 module.exports = async (dbName='shop') => {
     const {Savable, slice} = await connect(dbName)
 
-    async function getModels(id){
+    async function getModels({id}){
         const SlicedSavable = slice([id, 'user', 'admin'])
 
         class User extends SlicedSavable {
@@ -91,9 +91,9 @@ module.exports = async (dbName='shop') => {
 
         const thisUser = await Savable.m.User.findOne({_id: ObjectID(id)})
 
-        return {
+        return {models: {
             SlicedSavable, User, Good, Category, Order, OrderGood
-        }
+        }}
     }
 
     return {
