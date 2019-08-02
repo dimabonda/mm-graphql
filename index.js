@@ -6,7 +6,6 @@ const express = require('express');
 const express_graphql = require('express-graphql');
 const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLSchema, printSchema } = require('graphql');
 
-const anonResolvers = ['login', 'createUser'];
 
 
 function mmExpandSchema(gqlSchema){
@@ -258,7 +257,7 @@ function mmExpandSchema(gqlSchema){
     var app = express();
     app.use(express.static('public'));
 
-    const rootResolvers = {
+    const anonResolvers = {
         createUser:async function ({login, password}){
             let user =  await Savable.m.User.findOne({login, password})
             if (user)
@@ -283,37 +282,35 @@ function mmExpandSchema(gqlSchema){
             return token
         },
 
-        changePassword:async function ({password}, {jwt: {id}, models: {SlicedSavable, User}} ){
-            id = new ObjectID(id)
-
-            const user =  await SlicedSavable.m.User.findOne({_id: id})
-            if (!user)
-                return null;
-            user.password = password;
+        changePassword:async function ({login, password, newPassword}){
+            const user =  await Savable.m.User.findOne({login, password})
+            if (!user) return null;
+            user.password = newPassword;
             return await user.save()
         },
     }
 
+    const anonSchema = buildSchema(`
+        type Query {
+            login(login: String!, password: String!): String
+        }
+        type Mutation {
+            createUser(login: String!, password: String!): User
+            changePassword(login: String!, password: String!, newPassword: String!): User
+        }
+
+        type User {
+             _id: String
+             createdAt: String
+             login: String
+             nick : String
+        }
+
+    `)
+
+
     app.use('/graphql', express_graphql(async (req, res, gql) => { 
-        if (!gql.query){
-            return {
-                schema: schema,
-                rootValue: (...params) => (console.log(params), rootResolvers),
-                graphiql: true, 
-            }
-        }
-        const operationMatch = gql.query.match(/\{\s*([a-zA-Z]+)\s*/)
-        const operationName  = gql.operationName || operationMatch[1]
-        console.log('before oper', operationName)
-        if ((!operationName) || anonResolvers.includes(operationName)){
-            return {
-                schema: schema,
-                rootValue: rootResolvers,
-                graphiql: true, 
-            }
-        }
         const authorization = req.headers.authorization 
-        console.log(authorization)
         
         if (authorization && authorization.startsWith('Bearer ')){
             console.log('token provided')
@@ -326,14 +323,20 @@ function mmExpandSchema(gqlSchema){
 
                 return {
                     schema: schema,
-                    rootValue: rootResolvers,
+                    rootValue: {},
                     graphiql: true, 
                     context: {jwt: decoded.sub,
                               models: slicedModels}
                 }
             }
         }
-        console.log('bad end')
+        else {
+            return {
+                schema: anonSchema,
+                rootValue: anonResolvers,
+                graphiql: true, 
+            }
+        }
     }))
 
     app.listen(4000, () => console.log('Express GraphQL Server Now Running On localhost:4000/graphql'));
