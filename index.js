@@ -4,14 +4,13 @@ const jwtSecret   = 'CbymrfGfnB'
 
 const express = require('express');
 const express_graphql = require('express-graphql');
-const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLSchema} = require('graphql');
-const { buildASTSchema, parseSchemaIntoAST } = require('graphql/utilities');
+const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLSchema, printSchema } = require('graphql');
 
 const anonResolvers = ['login', 'createUser'];
 
 
 function mmExpandSchema(gqlSchema){
-    const types = {}
+    const types    = {}
     const _typeMap = gqlSchema.getTypeMap()
 
     const buildInTypes = ['Query',  'Mutation',  'ID',  'Float',  "String",  'Int',  'Boolean',
@@ -251,6 +250,7 @@ function mmExpandSchema(gqlSchema){
     `);
 
     schema = mmExpandSchema(schema)
+    console.log(printSchema(schema))
 
     //console.log(schema._typeMap.User.__proto__)
     //console.log(schema._typeMap.OrderInput.getFields())
@@ -291,141 +291,6 @@ function mmExpandSchema(gqlSchema){
                 return null;
             user.password = password;
             return await user.save()
-        },
-
-        async setCategory({cat}, {jwt: {id}, models: {SlicedSavable, Category}}){
-            if ('_id' in cat){
-                let entity = await SlicedSavable.m.Category.findOne({_id: ObjectID(cat._id)})
-                console.log(entity)
-                if (entity){
-                    entity.name = cat.name
-                    if (cat.goods){
-                        entity.goods = []
-                        for (goodId of cat.goods){
-                            let good = await SlicedSavable.m.Good.findOne({_id: ObjectID(goodId)});
-                            good && entity.goods.push(good)
-                        }
-                    }
-                    return await entity.save()
-                }
-            }
-            return await (new Category(cat)).save()
-        },
-
-        async categories({}, {jwt: {id}, models: {SlicedSavable, Category}}){
-            let categories = []
-            for (let category of SlicedSavable.m.Category.find({})){
-                try {category = await category} catch (e) { break }
-                categories.push(category)
-            }
-            return categories;
-        },
-
-        async category({_id}, {jwt: {id}, models: {SlicedSavable, Category}}){
-            return await SlicedSavable.m.Category.findOne({_id: ObjectID(_id)});
-        },
-
-
-        async setGood({good}, {jwt: {id}, models: {SlicedSavable, Good}}){
-            let entity;
-            if ('_id' in good){
-                entity = await SlicedSavable.m.Good.findOne({_id: ObjectID(good._id)})
-                if (entity){
-                    entity.name         = good.name
-                    entity.description  = good.description
-                    entity.price        = good.price      
-                }
-            }
-            entity = entity || new Good(good)
-            if (good.categories){
-                console.log(good.categories)
-                entity.categories = []
-                for (catId of good.categories){
-                    let cat = await SlicedSavable.m.Category.findOne({_id: ObjectID(catId)});
-                    cat && entity.categories.push(cat)
-                }
-            }
-            return await entity.save()
-        },
-
-        async goods({}, {jwt: {id}, models: {SlicedSavable, Good}}){
-            goods = []
-            for (let good of SlicedSavable.m.Good.find({})){
-                try {good = await good} catch (e) { break }
-                goods.push(good)
-            }
-            return goods;
-        },
-
-        async good({_id}, {jwt: {id}, models: {SlicedSavable, Good}}){
-            return await SlicedSavable.m.Good.findOne({_id: ObjectID(_id)});
-        },
-
-
-
-        async setOrder({order}, {jwt: {id}, models: {SlicedSavable, Order, thisUser}}){
-            let entity;
-            if ('_id' in order){
-                entity = await SlicedSavable.m.Order.findOne({_id: ObjectID(order._id)})
-            }
-            entity = entity || new Order(order)
-            if (order.orderGoods){
-                entity.orderGoods = []
-                for (orderGoodId of order.orderGoods){
-                    let orderGood = await SlicedSavable.m.OrderGood.findOne({_id: ObjectID(orderGoodId)});
-                    orderGood && entity.orderGoods.push(orderGood)
-                }
-            }
-            console.log(entity.orderGoods)
-            entity.user = thisUser
-            return await entity.save()
-        },
-
-        async orders({}, {jwt: {id}, models: {SlicedSavable}}){
-            orders = []
-            for (let order of SlicedSavable.m.Order.find({})){
-                try {order = await order} catch (e) { break }
-                orders.push(order)
-            }
-            return order;
-        },
-
-        async myOrders({}, {jwt: {id}, models: {SlicedSavable}}){
-            orders = []
-            for (let order of SlicedSavable.m.Order.find({___owner: id.toString(id)})){
-                try {order = await order} catch (e) { break }
-                orders.push(order)
-            }
-            return orders;
-        },
-
-        async order({_id}, {jwt: {id}, models: {SlicedSavable, Good}}){
-            return await SlicedSavable.m.Order.findOne({_id: ObjectID(_id)});
-        },
-
-
-
-        async setOrderGood({orderGood}, {jwt: {id}, models: {SlicedSavable, OrderGood, thisUser}}){
-            let order  = await SlicedSavable.m.Order.findOne({'_id': ObjectID(orderGood.order)})
-            let good   = await SlicedSavable.m.Good.findOne ({'_id': ObjectID(orderGood.good)})
-            if (order && good){
-                let entity = await SlicedSavable.m.OrderGood.findOne({'order._id': order._id,
-                                                                         'good._id':  good._id})
-                if (!entity){
-                    console.log('wtf')
-                    entity = new OrderGood({})
-                }
-
-                entity.price = good.price
-                entity.count = orderGood.count
-                entity.order = order
-                entity.good  = good
-                await entity.save()
-                console.log(entity)
-
-                return entity
-            }
-            return null;
         },
     }
 
