@@ -1,5 +1,3 @@
-const ObjectID    = require("mongodb").ObjectID;
-const jwt         = require('jsonwebtoken')
 const jwtSecret   = 'CbymrfGfnB'
 
 const express = require('express');
@@ -11,7 +9,7 @@ const expand = require('./expand')
 ;(async () => {
 
     const {Savable, slice, getModels} = await require('./models.js')()
-    const jwtGQL = require('./jwt')
+    const jwtGQL = require('./jwt').jwtGQL
 
     const {anonSchema, anonResolvers} = require('./anon')({Savable, secret: jwtSecret})
 
@@ -103,4 +101,3 @@ const expand = require('./expand')
     app.use('/graphql', express_graphql(jwtGQL({anonSchema, anonResolvers, schema, createContext: getModels, graphiql: true, secret: jwtSecret})))
     app.listen(4000, () => console.log('Express GraphQL Server Now Running On localhost:4000/graphql'));
 })()
-

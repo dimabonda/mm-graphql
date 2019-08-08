@@ -1,6 +1,5 @@
-const MongoClient = require("mongodb").MongoClient;
 const ObjectID    = require("mongodb").ObjectID;
-const {connect}          = require('mm')
+const {connect}   = require('mm')
 
 module.exports = async (dbName='shop') => {
     const {Savable, slice} = await connect(dbName)
@@ -92,8 +91,9 @@ module.exports = async (dbName='shop') => {
         const thisUser = await Savable.m.User.findOne({_id: ObjectID(id)})
 
         return {models: {
-            SlicedSavable, User, Good, Category, Order, OrderGood
-        }}
+                            SlicedSavable, User, Good, Category, Order, OrderGood
+                        }, 
+                thisUser}
     }
 
     return {
