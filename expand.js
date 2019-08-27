@@ -1,4 +1,4 @@
-const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLInt GraphQLList, GraphQLSchema } = require('graphql');
+const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLSchema } = require('graphql');
 const ObjectID    = require("mongodb").ObjectID;
 function mmExpandSchema(gqlSchema){
     const types    = {}
