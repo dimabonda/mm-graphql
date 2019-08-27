@@ -1,4 +1,4 @@
-const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLSchema } = require('graphql');
+const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLInt GraphQLList, GraphQLSchema } = require('graphql');
 const ObjectID    = require("mongodb").ObjectID;
 function mmExpandSchema(gqlSchema){
     const types    = {}
@@ -75,6 +75,19 @@ function mmExpandSchema(gqlSchema){
                         }
                     }
                     queryFields[`${outputTypeName}Find`] = find
+
+                    const count = {
+                        type: GraphQLInt,
+                        args: {query: {type: GraphQLString}},
+                        async resolve(root, args, context, info){
+                            //console.log(root, args, context, info)
+                            args = JSON.parse(args.query)
+                            args[1] = args[1] || {}
+                            args[1].count = []
+                            return find.resolve(root, args, context, info)
+                        }
+                    }
+                    queryFields[`${outputTypeName}Count`] = count
 
                     const findOne = {
                         type: _typeMap[outputTypeName],

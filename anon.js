@@ -1,8 +1,22 @@
 const { buildSchema } = require('graphql');
-const jwt         = require('jsonwebtoken')
+const jwt             = require('jsonwebtoken')
+const { createHash }  = require('crypto')
+
+const salt            = "IF384"
+
 module.exports = ({Savable, secret}) => {
     class User extends Savable {
+        async getACL(){
+            return [this._id.toString(), "user"]
+        }
 
+        set password(pwd){
+            this._password = User.getHash(pwd)
+        }
+
+        static getHash(pwd){
+            return createHash('sha256').update(pwd).update(salt).digest('hex')
+        }
     }
     Savable.addClass(User)
 
@@ -21,18 +35,17 @@ module.exports = ({Savable, secret}) => {
             return await user.save()
         },
 
-        login: async function({login, password}){
-            console.log(Savable.classes)
-            const user =  await Savable.m.User.findOne({login, password})
+        async login({login, password}){
+            const user =  await Savable.m.User.findOne({login, _password: User.getHash(password)})
             if (!user)
                 return null;
 
-            const token = jwt.sign({ sub: {id: user._id, login}}, secret); //подписывам токен нашим ключем
+            const token = jwt.sign({ sub: {id: user._id, login, acl: await user.getACL()}}, secret); //подписывам токен нашим ключем
             return token
         },
 
         changePassword:async function ({login, password, newPassword}){
-            const user =  await Savable.m.User.findOne({login, password})
+            const user =  await Savable.m.User.findOne({login, _password: User.getHash(password)})
             if (!user) return null;
             user.password = newPassword;
             return await user.save()
