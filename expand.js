@@ -80,10 +80,10 @@ function mmExpandSchema(gqlSchema){
                         type: GraphQLInt,
                         args: {query: {type: GraphQLString}},
                         async resolve(root, args, context, info){
-                            console.log(root, args, context, info)
                             q = JSON.parse(args.query)
                             q[1] = q[1] || {}
                             q[1].count = []
+                            console.log(q)
                             args.query = JSON.stringify(q)
                             return find.resolve(root, args, context, info)
                         }
