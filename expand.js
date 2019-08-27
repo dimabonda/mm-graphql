@@ -84,8 +84,8 @@ function mmExpandSchema(gqlSchema){
                             q = JSON.parse(args.query)
                             q[1] = q[1] || {}
                             q[1].count = []
-                            args.query = q
-                            return find.resolve(root, JSON.stringify(args), context, info)
+                            args.query = JSON.stringify(q)
+                            return find.resolve(root, args, context, info)
                         }
                     }
                     queryFields[`${outputTypeName}Count`] = count
