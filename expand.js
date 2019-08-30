@@ -16,11 +16,14 @@ function mmExpandSchema(gqlSchema){
         const type = _typeMap[outputTypeName + 'Input']
         const fields = type.getFields()
 
+        let changed = false
+
         for(let [fieldName, value] of Object.entries(data)){
             let typeName = fields[fieldName].type.toString()
 
             if (!buildInTypes.includes(typeName)){
                 console.log('recursive', arg[fieldName], typeName)
+                changed = true
                 if (typeName[0] === '['){
                     const nestedTypeName = typeName.slice(1,-6)
                     console.log('array',nestedTypeName)
@@ -41,7 +44,8 @@ function mmExpandSchema(gqlSchema){
                 entity[fieldName] = value
             }
         }
-        return await entity.save()
+        changed && await entity.save()
+        return entity
     }
 
 
