@@ -29,7 +29,7 @@ function mmExpandSchema(gqlSchema){
                     console.log('array',nestedTypeName)
 
                     entity[fieldName] = []
-                    for (let nestedArg of value){
+                    if (value) for (let nestedArg of value){
                         const nestedEntity = await argToSavables(nestedArg, nestedTypeName, Savable)
                         entity[fieldName].push(nestedEntity)
                     }
