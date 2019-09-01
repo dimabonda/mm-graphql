@@ -125,7 +125,7 @@ function mmExpandSchema(gqlSchema){
                             }
                             let entity = await Savable.m[outputTypeName].findOne({_id: ObjectID(arg._id)})
                             if (entity){
-                                let copy = {...record}
+                                let copy = {...entity}
                                 await entity.delete()
                                 return copy;
                             }
