@@ -30,7 +30,7 @@ module.exports = async (dbName='shop') => {
 
             static get relations(){
                 return {
-                    categories: "goods",
+                    categories: ["goods"],
                     orderGoods: "good",
                 }
             }
@@ -45,7 +45,7 @@ module.exports = async (dbName='shop') => {
 
             static get relations(){
                 return {
-                    goods: "categories",
+                    goods: ["categories"],
                 }
             }
         }
@@ -54,7 +54,7 @@ module.exports = async (dbName='shop') => {
         class Order extends SlicedSavable {
             constructor(...params){
                 super(...params)
-                this.orderGoods = this.orderGoods instanceof Array ? this.orderGoods : (this.orderGoods ? [this.orderGoods] : []) 
+                this.orderGoods = Savable.arrize(this.orderGoods)
             }
 
             get total(){
@@ -63,7 +63,7 @@ module.exports = async (dbName='shop') => {
 
             static get relations(){
                 return {
-                    user: "orders",
+                    user: ["orders"],
                     orderGoods: "order"
                 }
             }
@@ -81,8 +81,8 @@ module.exports = async (dbName='shop') => {
 
             static get relations(){
                 return {
-                    good: "orderGoods",
-                    order: "orderGoods"
+                    good: ["orderGoods"],
+                    order: ["orderGoods"]
                 }
             }
         }
