@@ -16,7 +16,7 @@ function mmExpandSchema(gqlSchema){
         const type = _typeMap[outputTypeName + 'Input']
         const fields = type.getFields()
 
-        let changed = false
+        let changed = !_id
 
         for(let [fieldName, value] of Object.entries(data)){
             let typeName = fields[fieldName].type.toString()
