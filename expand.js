@@ -121,7 +121,7 @@ function mmExpandSchema(gqlSchema){
                             const Savable = context.models.SlicedSavable || context.models.Savable 
                             args = JSON.parse(args.query)
                             queryUpdater(args[0])
-                            console.log(args)
+                            //console.log(args)
                             let results = []
 
                             for (let result of Savable.m[outputTypeName].find(...args)){
@@ -139,6 +139,7 @@ function mmExpandSchema(gqlSchema){
                         async resolve(root, args, context, info){
                             const Savable = context.models.SlicedSavable || context.models.Savable 
                             args = JSON.parse(args.query)
+                            queryUpdater(args[0])
                             return await Savable.m[outputTypeName].count(...args)
                         }
                     }
@@ -153,9 +154,7 @@ function mmExpandSchema(gqlSchema){
                             const Savable = context.models.SlicedSavable || context.models.Savable 
                             args = JSON.parse(args.query)
                             let [query] = args
-                            if (query._id && typeof query._id === 'string'){
-                                query._id = ObjectID(query._id)
-                            }
+                            queryUpdater(query)
                             let record = Savable.m[outputTypeName].findOne(query, ...args.slice(1))
                             return record;
                         }
