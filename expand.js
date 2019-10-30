@@ -107,6 +107,9 @@ function mmExpandSchema(gqlSchema){
                             }
                             return obj
                         }
+
+                        
+                        return walker(query)
                     }
 
                     const find = {
@@ -117,7 +120,7 @@ function mmExpandSchema(gqlSchema){
 
                             const Savable = context.models.SlicedSavable || context.models.Savable 
                             args = JSON.parse(args.query)
-                            walker(args[0])
+                            queryUpdater(args[0])
                             console.log(args)
                             let results = []
 
