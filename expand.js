@@ -61,7 +61,7 @@ function mmExpandSchema(gqlSchema){
                 if (outputTypeName in _typeMap){
                     types[outputTypeName] = type
 
-                    const queryUpdater(query){
+                    const queryUpdater = query => {
                         const checkers = [
                             function objectID(val){
                                 if (val && typeof val === 'string' && val.length == 24){
@@ -117,7 +117,7 @@ function mmExpandSchema(gqlSchema){
 
                             const Savable = context.models.SlicedSavable || context.models.Savable 
                             args = JSON.parse(args.query)
-                            walker(args)
+                            walker(args[0])
                             console.log(args)
                             let results = []
 
