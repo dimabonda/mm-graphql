@@ -31,7 +31,7 @@ module.exports = {
             }
         },
 
-    jwtGQLRole: ({schema, rootValue={},secret, createContext, graphiql=true, anonJwtSub={id: "anon"}}) => 
+    jwtGQLAnon: ({schema, rootValue={},secret, createContext, graphiql=true, anonJwtSub={id: "anon"}}) => 
         async (req, res, gql) => { 
             let decoded = jwtCheck(req, secret) || {sub: anonJwtSub}
             
