@@ -61,6 +61,54 @@ function mmExpandSchema(gqlSchema){
                 if (outputTypeName in _typeMap){
                     types[outputTypeName] = type
 
+                    const queryUpdater(query){
+                        const checkers = [
+                            function objectID(val){
+                                if (val && typeof val === 'string' && val.length == 24){
+                                    try {
+                                        const id = ObjectID(val)
+                                        if (id.toString() === val) return id
+                                    }
+                                    catch (e){
+                                        return val
+                                    }
+                                }
+                                return val
+                            },
+
+                            function regexp(val){
+                                if (val && typeof val === 'string' && val.startsWith('/') && val.endsWith('/')){
+                                    try {
+                                        return new Regexp(val.slice(1,-1))
+                                    }
+                                    catch (e){
+                                        return val
+                                    }
+                                }
+                                return val
+                            },
+                        ]
+
+                        const checker = val => {
+                            const originalVal = val
+                            for (let lambda of checkers){
+                                val = lambda(val)
+                            }
+                            return val !== originalVal && val 
+                        }
+
+                        const walker = obj =>{
+                            for (let [key, value] of Object.entries(obj)){
+                                let newValue;
+                                if (newValue = checker(value))    obj[key] = newValue;
+                                else if (newValue && typeof newValue === 'object'){
+                                    obj[key] = walker(value)
+                                }
+                            }
+                            return obj
+                        }
+                    }
+
                     const find = {
                         type: GraphQLList(_typeMap[outputTypeName]),
                         args: {query: {type: GraphQLString}},
@@ -69,6 +117,8 @@ function mmExpandSchema(gqlSchema){
 
                             const Savable = context.models.SlicedSavable || context.models.Savable 
                             args = JSON.parse(args.query)
+                            walker(args)
+                            console.log(args)
                             let results = []
 
                             for (let result of Savable.m[outputTypeName].find(...args)){
