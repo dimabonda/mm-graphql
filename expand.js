@@ -99,6 +99,7 @@ function mmExpandSchema(gqlSchema){
 
                         const walker = obj =>{
                             for (let [key, value] of Object.entries(obj)){
+                                if (key === '___owner') continue;
                                 let newValue;
                                 if (newValue = checker(value))    obj[key] = newValue;
                                 else if (newValue && typeof newValue === 'object'){
@@ -155,6 +156,7 @@ function mmExpandSchema(gqlSchema){
                             args = JSON.parse(args.query)
                             let [query] = args
                             queryUpdater(query)
+                            console.log(query)
                             let record = Savable.m[outputTypeName].findOne(query, ...args.slice(1))
                             return record;
                         }
