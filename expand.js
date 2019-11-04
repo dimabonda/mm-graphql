@@ -78,6 +78,7 @@ function mmExpandSchema(gqlSchema){
 
                             function regexp(val){
                                 if (val && typeof val === 'string' && val.startsWith('/') && val.endsWith('/')){
+                                    console.log('regexp found' ,val )
                                     try {
                                         return new RegExp(val.slice(1, -1))
                                     }
