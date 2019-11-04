@@ -99,13 +99,11 @@ function mmExpandSchema(gqlSchema){
                         }
 
                         const walker = obj =>{
-                            console.log('recursive' , key)
                             for (let [key, value] of Object.entries(obj)){
                                 if (key === '___owner') continue;
                                 let newValue;
                                 if (newValue = checker(value))    obj[key] = newValue;
-                                else if (newValue && typeof newValue === 'object'){
-                                    console.log('recursive' , key)
+                                else if (typeof value === 'object'){
                                     obj[key] = walker(value)
                                 }
                             }
