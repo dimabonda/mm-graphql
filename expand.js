@@ -47,7 +47,7 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields){
                 entity[fieldName] = value
             }
         }
-        console.log('changed')
+        console.log('changed', changed)
         changed && await entity.save()
         return entity
     }
