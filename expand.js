@@ -24,9 +24,9 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields){
         for(let [fieldName, value] of Object.entries(data)){
             let typeName = fields[fieldName].type.toString()
 
+            changed = true
             if (!buildInTypes.includes(typeName)){
                 console.log('recursive', arg[fieldName], typeName)
-                changed = true
                 if (typeName[0] === '['){
                     const nestedTypeName = typeName.slice(1,-6)
                     console.log('array',nestedTypeName)
@@ -47,7 +47,6 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields){
                 entity[fieldName] = value
             }
         }
-        console.log('changed', changed)
         changed && await entity.save()
         return entity
     }
