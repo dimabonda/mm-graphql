@@ -211,7 +211,7 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields){
 
 
     let newQuery     = new GraphQLObjectType({name: 'Query', fields:   {...defaultQueryFields, ...queryFields}})
-    let newMutation  = new GraphQLObjectType({name: 'Mutation', fields: {...defaultMutationFields, ...mutationFields})
+    let newMutation  = new GraphQLObjectType({name: 'Mutation', fields: {...defaultMutationFields, ...mutationFields}})
 
     let newSchema = new GraphQLSchema({query: newQuery, mutation: newMutation})
     return newSchema;
