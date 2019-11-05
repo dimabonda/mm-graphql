@@ -1,6 +1,6 @@
 const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLSchema } = require('graphql');
 const ObjectID    = require("mongodb").ObjectID;
-function mmExpandSchema(gqlSchema){
+function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields){
     const types    = {}
     const _typeMap = gqlSchema.getTypeMap()
 
@@ -210,8 +210,8 @@ function mmExpandSchema(gqlSchema){
     }
 
 
-    let newQuery     = new GraphQLObjectType({name: 'Query', fields: queryFields})
-    let newMutation  = new GraphQLObjectType({name: 'Mutation', fields: mutationFields})
+    let newQuery     = new GraphQLObjectType({name: 'Query', fields:   {...defaultQueryFields, ...queryFields}})
+    let newMutation  = new GraphQLObjectType({name: 'Mutation', fields: {...defaultMutationFields, ...mutationFields})
 
     let newSchema = new GraphQLSchema({query: newQuery, mutation: newMutation})
     return newSchema;
