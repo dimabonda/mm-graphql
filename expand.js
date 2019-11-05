@@ -5,7 +5,10 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields){
     const _typeMap = gqlSchema.getTypeMap()
 
     const buildInTypes = ['Query',  'Mutation',  'ID',  'Float',  "String",  'Int',  'Boolean',
-                          'Query!', 'Mutation!', 'ID!', 'Float!', "String!", 'Int!', 'Boolean!' ]
+                          'Query!', 'Mutation!', 'ID!', 'Float!', "String!", 'Int!', 'Boolean!',
+                          '[Query!]', '[Mutation!]', '[ID!]', '[Float!]', "[String!]", '[Int!]', '[Boolean!]',
+                          '[Query]', '[Mutation]', '[ID]', '[Float]', "[String]", '[Int]', '[Boolean]',
+    ]
 
 
     async function argToSavables(arg, outputTypeName, Savable){
