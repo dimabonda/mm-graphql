@@ -106,7 +106,7 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields){
                                 if (key === '___owner') continue;
                                 let newValue;
                                 if (newValue = checker(value))    obj[key] = newValue;
-                                else if (typeof value === 'object'){
+                                else if (value && typeof value === 'object'){
                                     obj[key] = walker(value)
                                 }
                             }
@@ -181,7 +181,12 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields){
                             if (! ('_id' in arg)){
                                 return null;
                             }
-                            let entity = await Savable.m[outputTypeName].findOne({_id: ObjectID(arg._id)})
+                            try{
+                                let entity = await Savable.m[outputTypeName].findOne({_id: ObjectID(arg._id)})
+                            }
+                            catch (e){
+                                console.log(e)
+                            }
                             if (entity){
                                 let copy = {...entity}
                                 await entity.delete()
