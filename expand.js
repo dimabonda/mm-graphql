@@ -83,7 +83,7 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields){
                                 if (val && typeof val === 'string' && val.startsWith('/') && val.endsWith('/')){
                                     console.log('regexp found' ,val )
                                     try {
-                                        return new RegExp(val.slice(1, -1))
+                                        return new RegExp(val.slice(1, -1), 'i')
                                     }
                                     catch (e){
                                         return val
