@@ -1,6 +1,15 @@
 const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLSchema } = require('graphql');
 const ObjectID    = require("mongodb").ObjectID;
-function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields){
+const bound       = 100;
+const scoper      = (...params) => {
+    if (params[1] && params[1].limit && Array.isArray(params[1].limit)){ 
+        let limit = params[1].limit[0]
+        if (!(Number.isInt(limit) && limit <= bound && limit > 0)){
+            params[1].limit = [bound]
+    }
+    return params
+}
+function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, scoper=scoper )){
     const types    = {}
     const _typeMap = gqlSchema.getTypeMap()
 
@@ -129,7 +138,7 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields){
                             //console.log(args)
                             let results = []
 
-                            for (let result of Savable.m[outputTypeName].find(...args)){
+                            for (let result of Savable.m[outputTypeName].find(scoper(...args))){
                                 try {result = await result} catch (e) { break }
                                 results.push(result)
                             }
