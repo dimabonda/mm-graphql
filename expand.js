@@ -1,6 +1,6 @@
 const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLSchema } = require('graphql');
 const ObjectID    = require("mongodb").ObjectID;
-const bound       = 10;
+const bound       = 100;
 function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, scoper){
     function scoperTest(query,cursorCalls={limit:[bound]}) {
         cursorCalls.limit || (cursorCalls.limit = [bound])
