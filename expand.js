@@ -3,7 +3,7 @@ const ObjectID    = require("mongodb").ObjectID;
 const bound       = 100;
 function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, scoper){
     function scoperTest(query,cursorCalls=[{},{limit:[limitValue=100]}]) {
-        console.log(limit)
+        console.log(limitValue)
         return params
     }
     scoper=scoper || scoperTest
