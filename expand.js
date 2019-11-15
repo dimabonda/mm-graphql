@@ -2,7 +2,7 @@ const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, 
 const ObjectID    = require("mongodb").ObjectID;
 const bound       = 100;
 function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, scoper){
-    function scoperTest(query,cursorCalls={limit:[limitValue=100]}) {
+    function scoperTest(query,cursorCalls={limit:[limitValue]}) {
         console.log(limitValue, cursorCalls)
         if (!Number.isInteger(limitValue) || limitValue <= 0 || limitValue > 100) cursorCalls.limit[0] = 100;
         return [query, cursorCalls]
