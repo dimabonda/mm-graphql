@@ -1,10 +1,10 @@
 const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLSchema } = require('graphql');
 const ObjectID    = require("mongodb").ObjectID;
-const bound       = 100;
+const bound       = 10;
 function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, scoper){
-    function scoperTest(query,cursorCalls={limit:[100]}) {
-        cursorCalls.limit || (cursorCalls.limit = [100])
-        if (!Number.isInteger(cursorCalls.limit[0]) || cursorCalls.limit[0] <= 0 || cursorCalls.limit[0] > 100) cursorCalls.limit = [100];
+    function scoperTest(query,cursorCalls={limit:[bound]}) {
+        cursorCalls.limit || (cursorCalls.limit = [bound])
+        if (!Number.isInteger(cursorCalls.limit[0]) || cursorCalls.limit[0] <= 0 || cursorCalls.limit[0] > bound) cursorCalls.limit = [bound];
         return [query, cursorCalls]
     }
     scoper=scoper || scoperTest
