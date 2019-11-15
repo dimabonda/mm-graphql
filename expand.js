@@ -1,7 +1,7 @@
 const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLSchema } = require('graphql');
 const ObjectID    = require("mongodb").ObjectID;
 const bound       = 100;
-const scoper      = (...params=[{},{limit:[limitValue]}]) => {
+const scoper      = (query,cursorCalls=[{},{limit:[limitValue=100]}]) => {
     console.log(limit)
     return params
 }
