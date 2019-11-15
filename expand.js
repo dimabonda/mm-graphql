@@ -136,7 +136,7 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, sc
                             //console.log(args)
                             let results = []
 
-                            for (let result of Savable.m[outputTypeName].find(scoper(...args))){
+                            for (let result of Savable.m[outputTypeName].find(...scoper(...args))){
                                 try {result = await result} catch (e) { break }
                                 results.push(result)
                             }
