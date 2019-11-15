@@ -1,11 +1,11 @@
 const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLSchema } = require('graphql');
 const ObjectID    = require("mongodb").ObjectID;
 const bound       = 100;
-const scoper      = (query,cursorCalls=[{},{limit:[limitValue=100]}]) => {
+function scoper      (query,cursorCalls=[{},{limit:[limitValue=100]}]) {
     console.log(limit)
     return params
 };
-function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, scoper=scoper ){
+function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, scoper=scoper){
     const types    = {}
     const _typeMap = gqlSchema.getTypeMap()
 
