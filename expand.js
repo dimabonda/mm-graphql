@@ -1,12 +1,8 @@
 const { buildSchema, GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLSchema } = require('graphql');
 const ObjectID    = require("mongodb").ObjectID;
 const bound       = 100;
-const scoper      = (...params) => {
-    if (params[1] && params[1].limit && Array.isArray(params[1].limit)){ 
-        let limit = params[1].limit[0]
-        if (!(Number.isInt(limit) && limit <= bound && limit > 0)){
-            params[1].limit = [bound]
-    }
+const scoper      = (...params=[{},{limit:[limitValue]}]) => {
+    console.log(limit)
     return params
 }
 function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, scoper=scoper )){
