@@ -4,7 +4,7 @@ const bound       = 100;
 function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, scoper){
     function scoperTest(query,cursorCalls=[{},{limit:[limitValue=100]}]) {
         console.log(limitValue)
-        return params
+        return [query, cursorCalls]
     }
     scoper=scoper || scoperTest
 
