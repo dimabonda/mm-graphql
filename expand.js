@@ -21,6 +21,7 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, sc
 
     async function argToSavables(arg, outputTypeName, Savable){
         console.log('argToSavables', arg)
+        if (!arg) return
         const entity = arg._id ? await Savable.m[outputTypeName].findOne({_id: ObjectID(arg._id)}) :
                                  new Savable.classes[outputTypeName]({})
         const {_id, ...data} = arg;
