@@ -22,6 +22,7 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, sc
     async function argToSavables(arg, outputTypeName, Savable){
         console.log('argToSavables', arg)
         if (!arg) return
+        if (!Savable.classes[outputTypeName]) return arg
         const entity = arg._id ? await Savable.m[outputTypeName].findOne({_id: ObjectID(arg._id)}) :
                                  new Savable.classes[outputTypeName]({})
         const {_id, ...data} = arg;
@@ -88,7 +89,7 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, sc
                                 return val
                             },
 
-                            function regexp(val){
+                            function regexp(val){ //probably will be deprecated in future. Reason: interference with "/some string/" string and $regexp mongo ability
                                 if (val && typeof val === 'string' && val.startsWith('/') && val.endsWith('/')){
                                     console.log('regexp found' ,val )
                                     try {
