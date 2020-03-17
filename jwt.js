@@ -10,10 +10,10 @@ function jwtCheck(req, secret) {
 }
 
 module.exports = {
-    jwtGQL: ({anonSchema, anonResolvers={}, schema, rootValue={},secret, createContext, graphiql=true}) => 
+    jwtGQL: ({anonSchema, anonResolvers={}, schema, rootValue={},secret, createContext, graphiql=true}, _jwtCheck=jwtCheck) => 
         async (req, res, gql) => { 
             let decoded;
-            if (decoded = jwtCheck(req, secret)){
+            if (decoded = _jwtCheck(req, secret)){
                 let context  = await createContext(decoded.sub)
                 context.jwt  = decoded.sub
 
@@ -31,9 +31,9 @@ module.exports = {
             }
         },
 
-    jwtGQLAnon: ({schema, rootValue={},secret, createContext, graphiql=true, anonJwtSub={id: "anon"}}) => 
+    jwtGQLAnon: ({schema, rootValue={},secret, createContext, graphiql=true, anonJwtSub={id: "anon"}}, _jwtCheck=jwtCheck) => 
         async (req, res, gql) => { 
-            let decoded = jwtCheck(req, secret) || {sub: anonJwtSub}
+            let decoded = _jwtCheck(req, secret) || {sub: anonJwtSub}
             
             let context  = await createContext(decoded.sub)
             context.jwt  = decoded.sub
