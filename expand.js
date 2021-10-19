@@ -188,11 +188,12 @@ function mmExpandSchema(gqlSchema, defaultQueryFields, defaultMutationFields, sc
 
                             const Savable = context.models.SlicedSavable || context.models.Savable 
                             const arg     = args[lowerCaseName]
+                            let entity;
                             if (! ('_id' in arg)){
                                 return null;
                             }
                             try{
-                                let entity = await Savable.m[outputTypeName].findOne({_id: ObjectID(arg._id)})
+                                entity = await Savable.m[outputTypeName].findOne({_id: ObjectID(arg._id)})
                             }
                             catch (e){
                                 console.log(e)
