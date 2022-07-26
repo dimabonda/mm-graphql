@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.a-level.com.ua:gitgod/mm-graphql.git"
+    "url": "git@github.com:dimabonda/mm-graphql.git"
   },
   "keywords": [
     "node",
@@ -23,6 +23,6 @@
     "express-graphql": "^0.9.0",
     "graphql": "^14.4.2",
     "jsonwebtoken": "^8.5.1",
-    "mm": "git+ssh://git@gitlab.a-level.com.ua:gitgod/mm.git"
+    "mm": "git+ssh://git@github.com:dimabonda/mm.git"
   }
 }
